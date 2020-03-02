@@ -7,5 +7,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class ArticleService(@Autowired private val articlesRepository: ArticlesRepository) {
+
+    fun findAll(): List<Article> = articlesRepository.findAll()
+
     fun create(article: Article): Article = articlesRepository.save(article)
+
 }

@@ -1,6 +1,15 @@
 language: java
 jdk: oraclejdk13
 
+deploy:
+  provider: heroku
+  api_key:
+    secure: Zn/m29/4ex/LQeeBwrioKeFzvnqKTwRZzN/lnlj4JTmhNtfdozqHwpHPZdrHDCUIn7ojsVsgfCsxFVEuF4sqTUmFD5vim8lDcL2GeziDHpuqyZAxMrbsPVxIm7iuMa3xSV49lxvGvVot0Xz5ePdIkJ8f8dTQUDI/qx6k+H3TeRtnXsYmmW3jZFLKxxhNc4cfV0RgAzcBwvEfaMR9o5P00eM6iIxRPHGg0JitfAXqj8EoUYtErAiCSAODUgn+0/lUNZ8BsGwvORidLgwGj3yWv10M2PFwhT2hz34y7Mh1XU9uPWT+DaEpK0RGR6VGkvUXp46VNIDJCTGTmprNRPEgPrK2QSZOImbjbZX8OBVNHnT2vb2Huk9NJJaBOVqn7aBZ421l71l+n6xTi0w3C2a0MKlKtwEKVwPMh75c22MCp0E/UGNwdCTar/gIrlWq6aQg+gB3jtwCBxSFPTtjIy04+L8lGIseOEVjw9vWPgSuLOvVA8s32/Nd59G4VhKtZkUREqgNwdGjdcyrF2AneaSUmGUnu7J9OSDLadGqrj1ZzQlMt7h7YyyM9uko+T8QgaZj73p7odN1jLegz6gPxQgZ5HOM06zHseZik/18B/cLjqex0/2ZGbMN0b4qmFHfnPk2MHnZqrjpXUzzN4xf9wyauzoEbzuByQQN0ODJurG8Zdg=
+  app: protected-harbor-70609
+  on:
+    branch: master
+
+
 after_success:
-  - ./gradlew jacocoTestReport
+  - "./gradlew jacocoTestReport"
   - bash <(curl -s https://codecov.io/bash)

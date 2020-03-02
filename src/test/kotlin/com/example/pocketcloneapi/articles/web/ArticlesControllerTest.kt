@@ -2,6 +2,7 @@ package com.example.pocketcloneapi.articles.web
 
 import com.example.pocketcloneapi.articles.persistance.Article
 import com.example.pocketcloneapi.articles.persistance.ArticlesRepository
+import com.example.pocketcloneapi.articles.support.TestHelpers
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -18,17 +20,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ArticlesControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val objectMapper: ObjectMapper,
-    @Autowired val articlesRepository: ArticlesRepository
+    @Autowired val articlesRepository: ArticlesRepository,
+    @Autowired val testHelpers: TestHelpers
 ) {
 
     @BeforeEach
     fun setup() {
-        articlesRepository.deleteAll()
+        testHelpers.clearDataBase()
     }
 
     @Test

@@ -1,18 +1,25 @@
 package com.example.pocketcloneapi.articles.persistance
 
+import com.example.pocketcloneapi.articles.support.TestHelpers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 
-@DataJpaTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 @ActiveProfiles("test")
-class ArticleRepositoryTests(@Autowired val articleRepository: ArticlesRepository) {
+class ArticleRepositoryTests(
+        @Autowired val articleRepository: ArticlesRepository,
+        @Autowired val testHelpers: TestHelpers
+) {
+
     @BeforeEach
     fun setup() {
-        articleRepository.deleteAll()
+        testHelpers.clearDataBase()
     }
 
     @Test

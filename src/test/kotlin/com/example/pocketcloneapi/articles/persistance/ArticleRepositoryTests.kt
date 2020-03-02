@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 
 @DataJpaTest
@@ -17,7 +18,7 @@ class ArticleRepositoryTests(@Autowired val articleRepository: ArticlesRepositor
 
     @Test
     fun `saves and loads an article`() {
-        val savedArticle = articleRepository.save(Article("wwww.example.com"))
+        val savedArticle = articleRepository.save(Article(url = "wwww.example.com"))
         val firstFound = articleRepository.findAll()[0]
 
         assertEquals(savedArticle.id, firstFound.id)

@@ -16,4 +16,8 @@ class ArticleController(@Autowired private val articleService: ArticleService) {
 
     @PostMapping("/articles")
     fun create(@Valid @RequestBody article: Article) : Article = articleService.create(article)
+
+    @DeleteMapping("/articles/{id}")
+    fun delete(@PathVariable id: Long): Unit = articleService.delete(id)
+
 }

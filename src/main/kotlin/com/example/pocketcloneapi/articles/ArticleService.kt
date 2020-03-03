@@ -12,4 +12,6 @@ class ArticleService(@Autowired private val articlesRepository: ArticlesReposito
 
     fun create(article: Article): Article = articlesRepository.save(article)
 
+    fun delete(id: Long): Unit = articlesRepository.deleteById(id)
+
 }

@@ -30,4 +30,13 @@ class ArticleRepositoryTests(
         assertEquals(savedArticle.id, firstFound.id)
         assertEquals("wwww.example.com", firstFound.url)
     }
+
+    @Test
+    fun `deletes an article`() {
+        val id = articleRepository.save(Article(url = "wwww.example.com")).id
+        articleRepository.deleteById(id)
+        val articles = articleRepository.findAll()
+
+        assertEquals(0, articles.size)
+    }
 }

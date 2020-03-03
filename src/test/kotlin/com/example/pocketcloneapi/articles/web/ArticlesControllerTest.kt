@@ -15,7 +15,8 @@ import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
@@ -53,9 +54,21 @@ class ArticlesControllerTest(
         articlesRepository.save(Article(url = "www.example.com"))
         articlesRepository.save(Article(url = "www.anotherWebsite.com"))
 
-        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/api/articles")
+        mockMvc.perform(get("http://localhost:8080/api/articles")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
+    }
+
+    @Test
+    fun `deletes an article`() {
+        val id = articlesRepository.save(Article(url = "www.example.com")).id
+
+        mockMvc.perform(delete("/api/articles/${id}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        val articles = articlesRepository.findAll()
+        assertEquals(0, articles.size)
     }
 }

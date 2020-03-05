@@ -1,13 +1,11 @@
 package com.example.pocketcloneapi.articles.web
 
-import com.example.pocketcloneapi.articles.ArticleService
 import com.example.pocketcloneapi.articles.JsoupConnection
 import com.example.pocketcloneapi.articles.persistance.Article
 import com.example.pocketcloneapi.articles.persistance.ArticlesRepository
 import com.example.pocketcloneapi.articles.support.TestHelpers
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers
-import org.jsoup.nodes.Document
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,9 +18,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -80,5 +76,18 @@ class ArticlesControllerTest(
 
         val articles = articlesRepository.findAll()
         assertEquals(0, articles.size)
+    }
+
+    @Test
+    fun `updates the isRead property of an article`() {
+        val id = articlesRepository.save(Article(url = "www.example.com", title = "Test site")).id
+
+        mockMvc.perform(put("/api/articles/${id}")
+                .content(objectMapper.writeValueAsString(UpdateParams(true)))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        val article = articlesRepository.findAll()[0]
+        assertEquals(true, article.isRead)
     }
 }

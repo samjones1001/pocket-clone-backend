@@ -14,12 +14,14 @@ class ArticleService(
     @Autowired private val jsoup: JsoupConnection
 ) {
 
-    fun findAll(): List<Article> = articlesRepository.findAll()
-
     fun create(articleUpload: ArticleUpload): Article {
         val article = Article(articleUpload.url, getArticleTitle(articleUpload.url))
         return articlesRepository.save(article)
     }
+
+    fun findAll(): List<Article> = articlesRepository.findAll()
+
+    fun update(id: Long, isRead: Boolean): Unit = articlesRepository.update(id, isRead)
 
     fun delete(id: Long): Unit = articlesRepository.deleteById(id)
 

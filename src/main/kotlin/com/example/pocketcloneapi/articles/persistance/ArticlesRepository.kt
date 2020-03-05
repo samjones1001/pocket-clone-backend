@@ -12,6 +12,8 @@ interface ArticlesRepository : JpaRepository<Article, Long>{}
 data class Article (
     val url: String,
 
+    val title: String,
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long = 0
 )

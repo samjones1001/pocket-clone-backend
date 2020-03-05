@@ -24,7 +24,9 @@ class ArticleRepositoryTests(
 
     @Test
     fun `saves and loads an article`() {
-        val savedArticle = articleRepository.save(Article(url = "wwww.example.com"))
+        val savedArticle = articleRepository.save(
+            Article(url = "wwww.example.com", title = "Test site")
+        )
         val firstFound = articleRepository.findAll()[0]
 
         assertEquals(savedArticle.id, firstFound.id)
@@ -33,7 +35,9 @@ class ArticleRepositoryTests(
 
     @Test
     fun `deletes an article`() {
-        val id = articleRepository.save(Article(url = "wwww.example.com")).id
+        val id = articleRepository.save(
+            Article(url = "wwww.example.com", title = "Test site")
+        ).id
         articleRepository.deleteById(id)
         val articles = articleRepository.findAll()
 

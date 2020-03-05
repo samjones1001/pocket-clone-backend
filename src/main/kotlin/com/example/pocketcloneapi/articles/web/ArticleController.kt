@@ -20,4 +20,8 @@ class ArticleController(@Autowired private val articleService: ArticleService) {
     @DeleteMapping("/articles/{id}")
     fun delete(@PathVariable id: Long): Unit = articleService.delete(id)
 
+    @PutMapping("/articles/{id}")
+    fun update(@PathVariable id: Long, @Valid @RequestBody params: UpdateParams): Unit =
+        articleService.update(id, params.isRead)
+
 }

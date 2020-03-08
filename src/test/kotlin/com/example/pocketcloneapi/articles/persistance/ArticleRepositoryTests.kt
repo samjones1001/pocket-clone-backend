@@ -13,8 +13,8 @@ import org.springframework.test.context.ActiveProfiles
 @DirtiesContext
 @ActiveProfiles("test")
 class ArticleRepositoryTests(
-        @Autowired val articleRepository: ArticlesRepository,
-        @Autowired val testHelpers: TestHelpers
+    @Autowired val articleRepository: ArticlesRepository,
+    @Autowired val testHelpers: TestHelpers
 ) {
 
     @BeforeEach

@@ -15,6 +15,7 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
+	maven { setUrl("https://jitpack.io") }
 }
 
 dependencies {
@@ -24,6 +25,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation( "org.jsoup:jsoup:1.13.1")
+	implementation("com.github.jkcclemens:khttp:0.1.0")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.mockito:mockito-core:2.1.0")

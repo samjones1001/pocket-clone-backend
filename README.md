@@ -3,7 +3,7 @@
 A Kotlin/Spring api for storing and retrieving web links for later reading. Intended for use with [PocketClone](https://github.com/samjones1001/pocket-clone-frontend)
 
 ### Live Version 
-A live version of this api is hosted [here](https://protected-harbor-70609.herokuapp.com). It responds to requests sent to the enpoints listed below in the [api section](#api)
+A live version of this api is hosted at `https://protected-harbor-70609.herokuapp.com`. It responds to requests sent to the enpoints listed below in the [api section](#api)
 
 ## Setup and Running
 

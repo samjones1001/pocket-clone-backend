@@ -1,5 +1,6 @@
 package com.example.pocketcloneapi.articles.web
 
+import com.example.pocketcloneapi.articles.JsoupConnection
 import com.example.pocketcloneapi.articles.persistance.Article
 import com.example.pocketcloneapi.articles.persistance.ArticlesRepository
 import com.example.pocketcloneapi.articles.support.TestHelpers
@@ -8,16 +9,16 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,14 +32,18 @@ class ArticlesControllerTest(
     @Autowired val testHelpers: TestHelpers
 ) {
 
+    @MockBean
+    private lateinit var mockJsoupConnection: JsoupConnection
+
     @BeforeEach
     fun setup() {
         testHelpers.clearDataBase()
     }
 
     @Test
-    fun `saves an article`() {
-        val article = Article("www.example.com")
+    fun `saves an article with a url and a title`() {
+        val article = ArticleUpload("http://www.example.com")
+        Mockito.`when`(mockJsoupConnection.getTitle(article.url)).thenReturn("Page Title")
 
         mockMvc.perform(post("/api/articles")
             .content(objectMapper.writeValueAsString(article))
@@ -46,13 +51,14 @@ class ArticlesControllerTest(
             .andExpect(MockMvcResultMatchers.status().isOk)
 
         val foundArticle = articlesRepository.findAll()[0]
-        assertEquals(foundArticle.url, "www.example.com")
+        assertEquals("http://www.example.com", foundArticle.url)
+        assertEquals("Page Title", foundArticle.title)
     }
 
     @Test
     fun `loads all articles`() {
-        articlesRepository.save(Article(url = "www.example.com"))
-        articlesRepository.save(Article(url = "www.anotherWebsite.com"))
+        articlesRepository.save(Article(url = "www.example.com", title = "Test site"))
+        articlesRepository.save(Article(url = "www.anotherWebsite.com", title = "Another test site"))
 
         mockMvc.perform(get("http://localhost:8080/api/articles")
             .contentType(MediaType.APPLICATION_JSON))
@@ -62,7 +68,7 @@ class ArticlesControllerTest(
 
     @Test
     fun `deletes an article`() {
-        val id = articlesRepository.save(Article(url = "www.example.com")).id
+        val id = articlesRepository.save(Article(url = "www.example.com", title = "Test site")).id
 
         mockMvc.perform(delete("/api/articles/${id}")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -70,5 +76,18 @@ class ArticlesControllerTest(
 
         val articles = articlesRepository.findAll()
         assertEquals(0, articles.size)
+    }
+
+    @Test
+    fun `updates the isRead property of an article`() {
+        val id = articlesRepository.save(Article(url = "www.example.com", title = "Test site")).id
+
+        mockMvc.perform(put("/api/articles/${id}")
+                .content(objectMapper.writeValueAsString(UpdateParams(true)))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        val article = articlesRepository.findAll()[0]
+        assertEquals(true, article.isRead)
     }
 }

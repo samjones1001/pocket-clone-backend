@@ -27,7 +27,7 @@ In standard mode, the api will expect to interact with a locally running [Posgre
     - `DB_USERNAME`
     - `DB_PASSWORD`
     
-Once this setup is complete, you will be able to run the api locally by navigating to the root directory of the project and using `./gradlew bottRun`.
+Once this setup is complete, you will be able to run the api locally by navigating to the root directory of the project and using `./gradlew bootRun`.
 
 #### Test Mode
 
